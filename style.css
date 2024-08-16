@@ -9,11 +9,17 @@ body {
 	font-family: 'Inter', sans-serif;
 	background:#212529;
 	color: #f8f9fa;
-	font-size: 1.3em;
+	font-size: 1.0em;
+}
+
+.container {
+	display: flex;
+	flex-wrap: wrap;
 }
 
 h2 {
 	margin: 0;
+	min-height: 90px;
 }
 
 .incident {
@@ -38,6 +44,14 @@ h2 {
 	color: #fff;
 }
 
+.item {
+	flex: 1 1 400px;
+	max-width: 20em;
+	/* margin: 3em 0; */
+	padding: 20px;
+	text-align: center;
+}
+
 .item p, .item p a {
 	margin: 0;
 	color: #aaa;
@@ -53,8 +67,9 @@ canvas:hover {
 }
 
 main {
-	max-width: 40em;
+	/* max-width: 40em; */
 	margin: auto;
+    align-content: center;
 	padding: 1em;
 }
 
@@ -119,9 +134,6 @@ a:link, a:visited, a:hover, a:active {
 .bloop.bad { background: #fa5252; }
 .bloop.meh { background: #ffd43b; }
 
-.item {
-	margin: 3em 0;
-}
 
 .good { color: #51cf66; }
 .bad { color: #fa5252; }
@@ -133,7 +145,7 @@ a:link, a:visited, a:hover, a:active {
 
 .bloop_info {
 	position: absolute;
-	top: 2em; left: 0em;
+	top: 1em; left: 0em;
 	background: #fff;
 	padding: 1em;
 	opacity: 1;

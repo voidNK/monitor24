@@ -4,11 +4,8 @@ include('configuration.php');
 include(PATH.'/Parsedown.php');
 
 if(!file_exists(PATH.'/monitors.json')) die('<h1>Missing monitors.json</h1><p>You’ll need a <code>monitors.json</code> file in the same location where this script exists. See <a href="https://github.com/neatnik/website-monitor">this page</a> for more information.</p>');
-
 if(!file_exists(PATH.'/monitors')) die('<h1>Missing monitors directory</h1><p>You’ll need a <code>monitors</code> directory in the same location where this script exists. See <a href="https://github.com/neatnik/website-monitor">this page</a> for more information.</p>');
-
 if(!file_exists(PATH.'/incidents')) die('<h1>Missing incidents directory</h1><p>You’ll need an <code>incidents</code> directory in the same location where this script exists. See <a href="https://github.com/neatnik/website-monitor">this page</a> for more information.</p>');
-
 if(!is_writable(PATH.'/monitors')) die('<h1>Monitors directory is not writable</h1><p>Your <code>monitors</code> directory is not writable. Please adjust its permissions and try again. See <a href="https://github.com/neatnik/website-monitor">this page</a> for more information.</p>');
 
 ?><!DOCTYPE html>
@@ -18,16 +15,25 @@ if(!is_writable(PATH.'/monitors')) die('<h1>Monitors directory is not writable</
 <meta charset="utf-8">
 <meta name="theme-color" content="#212529">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="300">
 <link href="style.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.2/dist/chart.min.js" crossorigin="anonymous"></script>
+<script src="js/chart.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
 <main>
 
-<h1>Website Monitor</h1>
+<!-- <h1>Website Monitor</h1> -->
 
 <?php
+
+
+echo '<div class="container">';
+echo '<a href="/monitor.php" class="button" target="blank" >Check Now</a>';
+echo '</div>';
+
+
+
 
 $incidents = array();
 foreach(glob(PATH.'/incidents/*.md') as $incident_file) {
@@ -46,6 +52,9 @@ foreach($incidents as $incident_filename => $class) {
 	echo '</div>';
 }
 
+echo '<div class="container">';
+
+
 $monitors = json_decode(file_get_contents(PATH.'/monitors.json'));
 
 $i = 0;
@@ -56,12 +65,12 @@ foreach($monitors as $monitor => $url) {
 	$last = $log[array_key_last($log)];
 	
 	if(is_numeric($last['response'])) {
-		$last = ' <span class="status">HTTP/1.1 '.$last['response'].'</span>';
+		$last = '<br/><span class="status">HTTP/1.1 '.$last['response'].'</span>';
 		$class = 'good';
 		$graph_color = '#51cf66';
 	}
 	else {
-		$last = ' <span class="status">HTTP/1.1 '.$last['response'].'</span>';
+		$last = '<br/><span class="status">HTTP/1.1 '.$last['response'].'</span>';
 		$class = 'bad';
 		$graph_color = '#fa5252';
 	}
@@ -171,13 +180,10 @@ EOD;
 	$i++;
 }
 
+echo '</div>';
+
+
 ?>
-
-<footer>
-
-<p>Website Monitor is an open source project inspired by <a href="https://broke.lol">broke.lol</a>. <a href="https://github.com/neatnik/website-monitor">Download it on GitHub</a>.</p>
-
-</footer>
 
 </main>
 </body>
