@@ -18,6 +18,15 @@ include('configuration.php');
 
 $monitors = json_decode(file_get_contents(PATH.'/monitors.json'));
 
+
+// clear folder incidents
+$files = glob(PATH.'/incidents/*');
+foreach($files as $file) {
+	if(is_file($file)) {
+		unlink($file);
+	}
+}
+
 foreach($monitors as $name => $url) {
 	$response_data = array();
 	$timestamp = time();
@@ -26,9 +35,31 @@ foreach($monitors as $name => $url) {
 	curl_setopt($curl, CURLOPT_URL, $url);
 	curl_setopt($curl, CURLOPT_HEADER, true);
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+	curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
 	$response = curl_exec($curl);
 	if(curl_exec($curl) === false) {
 		$response_data[$timestamp]['error'] = curl_error($curl);
+
+		// create file in folder incidents
+		$filename = PATH.'/incidents/'.'alert_'.date('Y-m-d-H-i-s').'-'.$name.'.md';
+		$handle = fopen($filename, 'w');
+		$data = '## '.$name.' is down'."\n\n";
+		// $data .= '### Error'."\n\n";
+		// $data .= $response_data[$timestamp]['error']."\n\n";
+		fwrite($handle, $data);
+		fclose($handle);
+
+		// send email
+		$to = "".ALERT_MAIL."";
+		$subject = "Alert: ".$name." is down";
+		$message = "The website ".$name." is down. Please check the incident file in the incidents folder.";
+		$message .= wordwrap($message, 70, "\r\n");
+		$message .= "".ALERT_MAIL_MESSAGE."";
+
+		//send
+		mail($to, $subject, $message);
+
 	}
 	else {
 		$info = curl_getinfo($curl);
