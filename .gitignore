@@ -1,2 +1,6 @@
 /configuration.php
 /monitors.json
+/monitors
+/incidents-drafts
+/.htaccess
+/.htpasswd

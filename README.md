@@ -10,16 +10,28 @@ Upload everything to your web server (except the `screen.png` file, which isn’
 
 Open `monitors.json` and add whatever websites you’d like you monitor. The format is a key-value pair, with the key being the “display name” of the website, and the value being the URL that will be checked. For example:
 
-```
+```json
 {
-	"example.com": "https:\/\/example.com",
-	"wikipedia.org": "https:\/\/www.wikipedia.org"
+    "example.com": "https:\/\/example.com",
+    "wikipedia.org": "https:\/\/www.wikipedia.org"
 }
 ```
 
-To automate your monitoring, you can add something like this to your crontab:
+Update `configuration.php` with
+
+```php
+
+define('PATH', substr(__FILE__, 0, strrpos(__FILE__, '/')));
+define('ALERTMAIL', 'mail@example.com');
+define('ALERT_MAIL_MESSAGE', 'https://monitor.example.com');
 
 ```
+
+For security access you should add .htaccess to the web folder.
+
+To automate your monitoring, you can add something like this to your crontab:
+
+```sh
 * * * * * /usr/bin/php -f /path/to/monitor.php >/dev/null 2>&1
 ```
 
